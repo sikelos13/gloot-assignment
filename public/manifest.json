@@ -1,0 +1,6 @@
+{
+  "short_name": "BeSport App",
+  "name": "Frontend App",
+  "start_url": ".",
+  "display": "standalone"
+}
