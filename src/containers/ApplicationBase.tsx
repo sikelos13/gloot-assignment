@@ -87,12 +87,12 @@ class StoreManagement extends Component<{}, ApplicationState> {
 
 
     handleUpdate = (form: any) => {
-        const { filteredPlayerList } = this.state;
+        const { playersList } = this.state;
 
         if (form.name !== "") {
             updatePlayerApi(form.id, form).then((response: UpdatePlayerApiResponse) => {
                 if (response.success) {
-                    const updatedList = filteredPlayerList.map((player: Player) => {
+                    const updatedList = playersList.map((player: Player) => {
                         if (form.id === player.id) {
                             return {
                                 ...player,
@@ -121,11 +121,11 @@ class StoreManagement extends Component<{}, ApplicationState> {
     }
 
     handleRowDelete = (id: string) => {
-        const { filteredPlayerList } = this.state;
+        const { playersList } = this.state;
 
         deletePlayerApi(id).then((response: DeletePlayerApiResponse) => {
             if (response.success) {
-                const updatedList = filteredPlayerList.filter((player: Player) => {
+                const updatedList = playersList.filter((player: Player) => {
                     return id !== player.id;
                 });
 
