@@ -17,7 +17,7 @@ const theme = createMuiTheme({
       dark: '#7190c9'
     },
     secondary: {
-      main: '#ffffff',
+      main: '#fff',
     },
     error: {
       main: red.A400,
@@ -26,6 +26,18 @@ const theme = createMuiTheme({
       default: '#ffffff',
     },
   },
+    overrides: {
+      MuiButton: {
+        containedPrimary: {
+          color: '#ffffff',
+        },
+      },
+      MuiTableHead: {
+        root: {
+          backgroundColor: '#7190c9'
+        }
+      }
+    }
 });
 
 export default theme;

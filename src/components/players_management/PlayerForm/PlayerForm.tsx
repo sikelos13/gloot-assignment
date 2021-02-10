@@ -1,8 +1,8 @@
 import React from 'react';
 import Box from '@material-ui/core/Box';
 import { Button } from '@material-ui/core';
-import { FormControl, FormHelperText, TextField, FormLabel } from '@material-ui/core';
-import { Player, PlayerFormData } from '@api/types/Players';
+import { FormControl, TextField, FormHelperText } from '@material-ui/core';
+import { PlayerFormData } from '@api/types/Players';
 import history from "../../../history";
 
 interface StoreFormProps {
@@ -22,13 +22,14 @@ const PlayerForm: React.FC<StoreFormProps> = (({ formData, handleInput, ...props
 
     return (
         <>
-            <Box p="50px 0 15px" display="flex" alignItems="center" justifyContent="space-between">
-                <span className="add-store-header">{!props.isNewPlayer ? `Edit ${formData.name}` : "Add new player"}</span>
-                <Button color="secondary" variant="contained" size="small" onClick={handleCancel}>Cancel</Button>
+            <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                <Box component="h3" fontWeight="500" fontSize="1.5rem" color="#673ab7">{!props.isNewPlayer ? `Edit ${formData.name}` : "Add new player"}</Box>
+                {props.formErrorText &&
+                        <FormHelperText className="form-error" error={true}>{props.formErrorText}</FormHelperText>
+                    }
             </Box>
             {formData &&
                 <Box 
-                    key={formData.name}
                     display="flex" 
                     flexDirection="column"
                 >
@@ -37,24 +38,33 @@ const PlayerForm: React.FC<StoreFormProps> = (({ formData, handleInput, ...props
                             className="form-input-field"
                             label="Player name"
                             variant="outlined"
-                            name="title"
+                            name="name"
                             defaultValue={formData.name}
                             size="small"
-                            placeholder="π.χ. My store"
+                            placeholder="e.g. Cristiano Ronaldo"
                             onChange={handleInput}
                         />
                     </FormControl>
                
-                    <Box display="flex" alignItems="center" justifyContent="flex-end">
+                    <Box mt={1} display="flex" alignItems="center" justifyContent="flex-end">
                         <Button
                             variant="contained"
-                            className="form-save"
                             color="primary"
                             size="small"
                             disabled={props.saving}
                             onClick={props.handleSave}
                         >
                             {props.saving ? 'Saving...' : 'Save'}
+                        </Button>
+
+                        <Button 
+                            color="secondary" 
+                            className="cancel-form-button"
+                            variant="contained" 
+                            size="small" 
+                            onClick={handleCancel}
+                        >
+                            Cancel
                         </Button>
                     </Box>
                 </Box>

@@ -4,5 +4,6 @@ export interface Player {
 }
 
 export interface PlayerFormData {
+    id?: string;
     name: string;
 }

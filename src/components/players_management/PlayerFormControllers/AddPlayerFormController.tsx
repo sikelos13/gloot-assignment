@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Player, PlayerFormData } from '@api/types/Players';
-import _debounce from 'lodash-es/debounce';
+import { PlayerFormData } from '@api/types/Players';
 import { createPlayerApi, CreatePlayerApiResponse } from '@api/players_management/createPlayer';
 import { getInitState } from "../utils/getInitState";
 import history from "../../../history";
 import toast from 'react-hot-toast';
 import PlayerForm from '../PlayerForm/PlayerForm';
+import Box from '@material-ui/core/Box';
 
 interface AddPlayerFormControllerState {
     formData: PlayerFormData;
@@ -18,66 +18,67 @@ class AddPlayerFormController extends Component<{}, AddPlayerFormControllerState
         super(props)
 
         this.state = getInitState();
-        this.handleInput = _debounce(this.handleInput, 500);
     }
 
     handleInput = (event: any) => {
-        // const { formData } = this.state;
-        // const { name, value } = event.target;
+        const { value } = event.target;
 
-        // this.setState({
-        //     formErrorText: "",
-        //     formData: {
-        //         ...formData,
-        //         [name]: value,
-        //     }
-        // });
+        this.setState({
+            formErrorText: "",
+            formData: {
+                name: value,
+            }
+        });
     };
 
     handleSave = () => {
-        // const { formData } = this.state;
-        // const form = getCleanFormData(formData);
+        const { formData } = this.state;
 
-        // this.setState({ saving: true });
-        // const formIsInvalid = validateForm(formData).formIsInvalid;
-        // const formErrorText = validateForm(formData).formErrorText;
+        this.setState({ saving: true });
 
-        // if (!formIsInvalid) {
-        //     createPlayerApi(form).then((response: CreateStoreApplicationApiResponse) => {
-        //         if (response.success) {
-        //             getInitState();
-        //             this.handleCancel();
-        //             toast.success(response.successMessage, {
-        //                 duration: 3000
-        //             });
-        //         } else {
-        //             this.setState({saving: false })
-        //             toast.error(response.errorMessage, {
-        //                 duration: 3000
-        //             });
-        //         }
-        //     });
-        // } else {
-        //     this.setState({ saving: false, formErrorText })
-        // }
+        if (formData.name !== "") {
+            createPlayerApi(formData).then((response: CreatePlayerApiResponse) => {
+                if (response.success) {
+                    toast.success(response.successMessage, {
+                        duration: 3000
+                    });
+                    history.push('/players');
+                } else {
+                    this.setState({ saving: false })
+                    toast.error(response.errorMessage, {
+                        duration: 3000
+                    });
+                }
+            });
+        } else {
+            this.setState({ saving: false, formErrorText: "Name can not be empty" })
+        }
     }
 
     render() {
-        const {  
-            saving, 
-            formErrorText, 
+        const {
+            saving,
+            formErrorText,
             formData
         } = this.state;
 
         return (
-            <PlayerForm
-                handleInput={this.handleInput}
-                formErrorText={formErrorText}
-                formData={formData}
-                handleSave={this.handleSave}
-                saving={saving}
-                isNewPlayer={true}
-            />
+            <Box
+                boxShadow="0 15px 17px 0 rgb(0 0 0 / 16%), 0 15px 17px 0 rgb(0 0 0 / 12%)"
+                border="1px black solid"
+                borderRadius="8px"
+                p={2}
+                mt={2}
+            >
+                <PlayerForm
+                    handleInput={this.handleInput}
+                    formErrorText={formErrorText}
+                    formData={formData}
+                    handleSave={this.handleSave}
+                    saving={saving}
+                    isNewPlayer={true}
+                />
+            </Box>
         );
     }
 }

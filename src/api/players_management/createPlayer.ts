@@ -9,10 +9,10 @@ export interface CreatePlayerApiResponse {
     status: number
 }
 /**
- *  Great new store
+ *  Great new player
  *
  * Endpoints:
- * - POST api/store_management/
+ * - POST player/
  * @param {FormData} form
  *
  * @returns Promise<CreatePlayerApiResponse>

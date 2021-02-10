@@ -50,19 +50,15 @@ class EditPlayerFormController extends Component<{}, EditPlayerFormControllerSta
     }
 
     handleInput = (event: any) => {
-        // const { formData, updatedFormData } = this.state;
-        // const { name, value } = event.target;
+        const { formData } = this.state;
+        const { value } = event.target;
 
-        // this.setState({
-        //     formData: {
-        //         ...formData,
-        //         [name]: value
-        //     },
-        //     updatedFormData: {
-        //         ...updatedFormData,
-        //         [name]: value
-        //     }
-        // });
+        this.setState({
+            formData: {
+                ...formData,
+                name: value
+            },
+        });
     };
 
     handleSave = () => {
@@ -103,7 +99,13 @@ class EditPlayerFormController extends Component<{}, EditPlayerFormControllerSta
         const { saving, formData, loading, formErrorText } = this.state;
 
         return (
-            <>
+            <Box 
+                boxShadow="0 15px 17px 0 rgb(0 0 0 / 16%), 0 15px 17px 0 rgb(0 0 0 / 12%)" 
+                border="1px black solid" 
+                borderRadius="8px" 
+                p={2} 
+                mt={2}
+            >
                 {!loading &&
                     <PlayerForm
                         handleInput={this.handleInput}
@@ -119,7 +121,7 @@ class EditPlayerFormController extends Component<{}, EditPlayerFormControllerSta
                         <CircularProgress color="primary" className="loading-spinner" />
                     </Box>
                 }
-            </>
+            </Box>
         );
     }
 }

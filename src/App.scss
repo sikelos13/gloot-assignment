@@ -2,8 +2,15 @@ html, body {
     font-family: Varela Round;
     font-style: normal;
     font-weight: normal;
-    background-color: #ffffff;
+    background-color: #e3eeff;
+}
+
+.main-container {
+    background-color: #fff;
+    padding: 0 !important;
+    border-radius: 8px;
 }
 
 @import 'styles/players_management.scss';
 @import 'styles/table_styled.scss';
+@import 'components/players_management//PlayerForm/player_form_styled.scss';

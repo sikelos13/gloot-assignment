@@ -9,15 +9,17 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box';
-import { Button, Container } from '@material-ui/core';
 import history from "../history";
 import { deletePlayerApi, DeletePlayerApiResponse } from '@api/players_management/deletePlayer';
 import toast from 'react-hot-toast';
 import SkeletonLoader from "@components/common/TableCellLoader";
+import AppHeader from '@components/AppHeader';
+import _debounce from 'lodash-es/debounce';
 
 interface ApplicationState {
     loading: boolean;
     playersList: Player[];
+    filteredPlayerList: Player[]
 }
 
 class StoreManagement extends Component<{}, ApplicationState> {
@@ -26,8 +28,11 @@ class StoreManagement extends Component<{}, ApplicationState> {
 
         this.state = {
             playersList: [],
+            filteredPlayerList: [],
             loading: false
         }
+
+        this.handleSearch = _debounce(this.handleSearch, 500);
     }
 
     componentDidMount() {
@@ -40,12 +45,14 @@ class StoreManagement extends Component<{}, ApplicationState> {
             if (response.success) {
                 this.setState({
                     playersList: response.data,
+                    filteredPlayerList: response.data,
                     loading: false
                 })
             } else {
                 toast.error(response.errorMessage);
                 this.setState({
                     playersList: [],
+                    filteredPlayerList: [],
                     loading: false
                 })
             }
@@ -73,6 +80,30 @@ class StoreManagement extends Component<{}, ApplicationState> {
         });
     }
 
+    handleSearch = (event: any) => {
+        const { playersList } = this.state;
+        const value = event.target.value
+        
+        if (playersList) {
+            if (value !== '') {
+                const returnedFilteredPlayers = playersList.filter((player: Player) => {
+                    if (player.name.toLowerCase().indexOf(value.toLowerCase()) !== -1) {
+                        return player;
+                    }
+                });
+
+                this.setState({
+                    filteredPlayerList: returnedFilteredPlayers,
+                })
+            } else {
+                this.setState({
+                    filteredPlayerList: playersList,
+                })
+            }
+        }
+    }
+    
+
     handleRowClick = (event: any) => {
         const { value } = event.currentTarget;
 
@@ -92,14 +123,17 @@ class StoreManagement extends Component<{}, ApplicationState> {
     }
 
     render() {
-        const { playersList, loading } = this.state;
-
+        const { filteredPlayerList, loading } = this.state;
+     
         return (
-            <Box border="1px black solid" borderRadius="8px" p={2} mt={2}>
-                <Box p="25px 0 15px" display="flex" alignItems="center" justifyContent="space-between">
-                    <span className="players-management-header">Players Management</span>
-                    <Button color="primary" variant="contained" size="small" onClick={this.handleAddStore}>Add new player</Button>
-                </Box>
+            <Box 
+                boxShadow="0 15px 17px 0 rgb(0 0 0 / 16%), 0 15px 17px 0 rgb(0 0 0 / 12%)" 
+                border="1px black solid" 
+                borderRadius="8px" 
+                p={2} 
+                mt={2}
+            >
+                <AppHeader handleSearch={this.handleSearch} handleAddStore={this.handleAddStore} />
                 <Box
                     mt={2}
                     pb={2}
@@ -120,15 +154,15 @@ class StoreManagement extends Component<{}, ApplicationState> {
                                 </TableHead>
                                 <TableBody>
 
-                                {playersList && playersList.length > 0 &&
+                                {filteredPlayerList && filteredPlayerList.length > 0 &&
                                     <PlayersList
-                                        playersList={playersList}
+                                        playersList={filteredPlayerList}
                                         handleRowClick={this.handleRowClick}
                                         handleRowDelete={this.handleRowDelete}
                                     />
                                 }
 
-                                {playersList && playersList.length === 0 &&
+                                {filteredPlayerList && filteredPlayerList.length === 0 &&
                                     <TableRow className="table-row"><TableCell className="no-data-cell" colSpan={8}>No players available</TableCell></TableRow>
                                 }
                                 
@@ -140,7 +174,6 @@ class StoreManagement extends Component<{}, ApplicationState> {
                         }
                     </TableContainer>
                 </Box>
-
             </Box>
         );
     }
