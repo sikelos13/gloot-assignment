@@ -24,7 +24,7 @@ export const createPlayerApi = (form: any): Promise<CreatePlayerApiResponse> => 
             if (response.status >= 200 && response.status < 300) {
                 return {
                     ...response,
-                    successMessage: "Επιτυχής δημιουργία καταστήματος",
+                    successMessage: "Player created successfully",
                     success: true
                 }
             } else if (response.status === 400) {

@@ -6,11 +6,9 @@ interface ViewHeaderProps {
 }
 
 const ViewHeader: React.FC<ViewHeaderProps> = (({ title }: ViewHeaderProps) => (
-  <>
-    <Box p="50px 0 15px" display="flex" alignItems="center" justifyContent="space-between">
-              <span className="store-management-header">{title}</span>
-      </Box>
-  </>
+  <Box p="50px 0 15px" display="flex" alignItems="center" justifyContent="space-between">
+      <span className="players-management-header">{title}</span>
+  </Box>
 ));
 
 export default ViewHeader;

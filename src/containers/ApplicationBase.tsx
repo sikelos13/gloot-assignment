@@ -9,7 +9,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box';
-import { Button } from '@material-ui/core';
+import { Button, Container } from '@material-ui/core';
 import history from "../history";
 import { deletePlayerApi, DeletePlayerApiResponse } from '@api/players_management/deletePlayer';
 import toast from 'react-hot-toast';
@@ -95,13 +95,14 @@ class StoreManagement extends Component<{}, ApplicationState> {
         const { playersList, loading } = this.state;
 
         return (
-            <>
-                <Box p="50px 0 15px" display="flex" alignItems="center" justifyContent="space-between">
-                    <span className="store-management-header">Players Management</span>
+            <Box border="1px black solid" borderRadius="8px" p={2} mt={2}>
+                <Box p="25px 0 15px" display="flex" alignItems="center" justifyContent="space-between">
+                    <span className="players-management-header">Players Management</span>
                     <Button color="primary" variant="contained" size="small" onClick={this.handleAddStore}>Add new player</Button>
                 </Box>
                 <Box
                     mt={2}
+                    pb={2}
                     display="flex"
                     flexDirection="row"
                     flexWrap="wrap"
@@ -119,17 +120,18 @@ class StoreManagement extends Component<{}, ApplicationState> {
                                 </TableHead>
                                 <TableBody>
 
-                                    {playersList && playersList.length > 0 &&
-                                        <PlayersList
-                                            playersList={playersList}
-                                            handleRowClick={this.handleRowClick}
-                                            handleRowDelete={this.handleRowDelete}
-                                        />
-                                    }
+                                {playersList && playersList.length > 0 &&
+                                    <PlayersList
+                                        playersList={playersList}
+                                        handleRowClick={this.handleRowClick}
+                                        handleRowDelete={this.handleRowDelete}
+                                    />
+                                }
 
-                                    {playersList && playersList.length === 0 &&
-                                        <TableRow className="table-row"><TableCell className="no-data-cell" colSpan={8}>No players available</TableCell></TableRow>
-                                    }
+                                {playersList && playersList.length === 0 &&
+                                    <TableRow className="table-row"><TableCell className="no-data-cell" colSpan={8}>No players available</TableCell></TableRow>
+                                }
+                                
                                 </TableBody>
                             </Table>
                         }
@@ -139,7 +141,7 @@ class StoreManagement extends Component<{}, ApplicationState> {
                     </TableContainer>
                 </Box>
 
-            </>
+            </Box>
         );
     }
 }

@@ -13,7 +13,7 @@ export interface DeletePlayerApiResponse {
  *
  * Endpoints:
  * - DELETE player/{id}
- * @param {uid} string
+ * @param {id} string
  *
  * @returns Promise<DeletePlayerApiResponse>
  */

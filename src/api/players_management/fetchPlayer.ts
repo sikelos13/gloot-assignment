@@ -1,4 +1,5 @@
 
+import { Player } from '@api/types/Players';
 import axios from 'axios';
 import { handleErrorMessage } from '../utils/handleErrorMessage';
 
@@ -6,14 +7,15 @@ export interface FetchPlayerApiResponse {
     success: boolean;
     errorMessage: string;
     successMessage: string;
-    status: number
+    status: number;
+    data: Player;
 }
 /**
  *  Get player details
  *
  * Endpoints:
  * - GET /player/{id}
- *
+ * @param {id} string 
  *
  * @returns Promise<FetchPlayerApiResponse>
  */

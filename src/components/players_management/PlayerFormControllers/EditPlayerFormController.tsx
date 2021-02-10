@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Player, PlayerFormData } from '@api/types/Players';
 import { updatePlayerApi, UpdatePlayerApiResponse } from '@api/players_management/updatePlayer';
+import { fetchPlayerApi, FetchPlayerApiResponse } from '@api/players_management/fetchPlayer';
 import history from "../../../history";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Box } from '@material-ui/core';
@@ -10,7 +11,6 @@ import { getInitState } from "../utils/getInitState";
 
 interface EditPlayerFormControllerState {
     formData: PlayerFormData;
-    player?: Player;
     saving: boolean;
     formErrorText: string;
     loading?: boolean;
@@ -21,6 +21,32 @@ class EditPlayerFormController extends Component<{}, EditPlayerFormControllerSta
         super(props)
 
         this.state = getInitState();
+    }
+
+    componentDidMount() {
+        this.fetchPlayer()
+    }
+
+    fetchPlayer = () => {
+        const playerId = history.location.state as string;
+
+        if (!playerId || playerId === "") {
+            history.push('/players');
+        }
+
+        this.setState({ loading: true });
+        fetchPlayerApi(playerId).then((response: FetchPlayerApiResponse) => {
+            if (response.success) {
+                console.log(response)
+                this.setState({
+                    loading: false,
+                    formData: response.data
+                })
+            } else {
+                this.setState({ saving: false, loading: false });
+                toast.error(response.errorMessage, { duration: 3000 });
+            }
+        })
     }
 
     handleInput = (event: any) => {
