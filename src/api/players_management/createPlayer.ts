@@ -1,4 +1,5 @@
 
+import { Player } from '@api/types/Players';
 import axios from 'axios';
 import { handleErrorMessage } from '../utils/handleErrorMessage';
 
@@ -6,7 +7,8 @@ export interface CreatePlayerApiResponse {
     success: boolean;
     errorMessage: string;
     successMessage: string;
-    status: number
+    status: number;
+    data: Player;
 }
 /**
  *  Great new player
