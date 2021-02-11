@@ -1,7 +1,7 @@
-import React, { memo, useState } from 'react';
+import React, { useState } from 'react';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import { Player } from '@api/types/Players';
+import { Player } from '../../api/types/Players';
 import { Button, Input } from '@material-ui/core';
 
 interface StoresListProps {
@@ -10,7 +10,7 @@ interface StoresListProps {
     handleDelete: (id: string) => void;
 }
 
-const PlayersList: React.FC<StoresListProps> = memo(({ playersList, handleDelete, handleUpdate }: StoresListProps) => {
+const PlayersList: React.FC<StoresListProps> = (({ playersList, handleDelete, handleUpdate }: StoresListProps) => {
     const [isEditMode, setMode] = useState(false);
     const [name, setName] = useState("");
     const [selectedRow, setSelectedRow] = useState("");

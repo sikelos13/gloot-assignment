@@ -1,5 +1,5 @@
 
-import { Player } from '@api/types/Players';
+import { Player } from '../../api/types/Players';
 import axios from 'axios';
 import { handleErrorMessage } from '../utils/handleErrorMessage';
 

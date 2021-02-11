@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { fetchPlayersApi } from '@api/players_management/fetchPlayers';
-import PlayersList from '@components/players_management/PlayersList';
-import { Player } from '@api/types/Players';
+import { fetchPlayersApi } from '../api/players_management/fetchPlayers';
+import PlayersList from '../components/players_management/PlayersList';
+import { Player } from '../api/types/Players';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -9,13 +9,12 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box';
-import { deletePlayerApi, DeletePlayerApiResponse } from '@api/players_management/deletePlayer';
+import { deletePlayerApi, DeletePlayerApiResponse } from '../api/players_management/deletePlayer';
 import toast from 'react-hot-toast';
-import SkeletonLoader from "@components/common/TableCellLoader";
-import AppHeader from '@components/AppHeader';
-import _debounce from 'lodash-es/debounce';
-import { updatePlayerApi, UpdatePlayerApiResponse } from '@api/players_management/updatePlayer';
-import { createPlayerApi, CreatePlayerApiResponse } from '@api/players_management/createPlayer';
+import SkeletonLoader from "../components/common/TableCellLoader";
+import AppHeader from '../components/AppHeader';
+import { updatePlayerApi, UpdatePlayerApiResponse } from '../api/players_management/updatePlayer';
+import { createPlayerApi, CreatePlayerApiResponse } from '../api/players_management/createPlayer';
 
 interface ApplicationState {
     loading: boolean;
@@ -35,8 +34,24 @@ class StoreManagement extends Component<{}, ApplicationState> {
             newPlayerName: ""
         }
 
-        this.handleSearch = _debounce(this.handleSearch, 500);
+        // this.handleSearch = setTimeout(this.handleSearch, 500);
     }
+
+    // debounce = (callback: any, wait: number, immediate: boolean = false) => {
+    //     let timeout = null as number | null;
+        
+    //     return function() {
+    //       const callNow = immediate && !timeout
+    //       const next = () => callback.apply(this, arguments)
+          
+    //       clearTimeout(timeout)
+    //       timeout = setTimeout(next, wait)
+      
+    //       if (callNow) {
+    //         next()
+    //       }
+    //     }
+    //   }
 
     componentDidMount() {
         this.fetchPlayers();
@@ -141,7 +156,8 @@ class StoreManagement extends Component<{}, ApplicationState> {
         });
     }
 
-    handleAddPlayer = () => {
+    handleAddPlayer = (event: any) => {
+        event.preventDefault();
         const { playersList, newPlayerName } = this.state;
         let updatedList = playersList;
 
@@ -154,15 +170,21 @@ class StoreManagement extends Component<{}, ApplicationState> {
                 if (response.success) {
                     updatedList.push(response.data);
 
-                    this.setState({ filteredPlayerList: updatedList, playersList: updatedList });
-                    toast.success(response.successMessage, {
-                        duration: 4000
+                    this.setState({ filteredPlayerList: updatedList, playersList: updatedList }, () => {
+                        toast.success(response.successMessage, {
+                            duration: 4000
+                        });
                     });
+                  
                 } else {
                     toast.error(response.errorMessage, {
                         duration: 4000
                     });
                 }
+            });
+        } else {
+            toast.error("Name can not be empty", {
+                duration: 3000
             });
         }
     }

@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import { Route, Switch } from 'react-router-dom';
-import StoreManagement from '@containers/ApplicationBase';
+import StoreManagement from './containers/ApplicationBase';
 import { Container } from '@material-ui/core';
 
 export default class Routes extends Component<{}, {}> {

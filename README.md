@@ -26,6 +26,19 @@ cd gloot-assignment
 npm install
 npm run start
 ```
+
+### Features implemented
+* Search field with on change search action
+* If search results are null disable the editor
+* If user deletes the currently selected note it will automatically select the next from the top of the list
+* Delete notes from list easily with one click
+* Delete notes from filtered list after search action
+* Create note
+* Notes that are being edit will be automatically saved on the fly
+* Notes will be persisted in localStorage of user's browser
+* Markdown parser implemented with [React Markdown](https://github.com/rexxars/react-markdown)
+* Project has been Dockerized 
+
 ### Testing build with
 
 * [Jest for React](https://jestjs.io/)
