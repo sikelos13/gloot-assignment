@@ -1,6 +1,5 @@
 import React from "react";
 import { History } from "history";
-import { ApplicationState } from "./types";
 import { Router } from 'react-router-dom';
 import './App.scss';
 import Routes from './Routes';
@@ -10,7 +9,7 @@ interface OwnProps {
     history: History;
 }
 
-class App extends React.Component<OwnProps,ApplicationState> {
+class App extends React.Component<OwnProps,{}> {
 
     public render() {
         const { history } = this.props;

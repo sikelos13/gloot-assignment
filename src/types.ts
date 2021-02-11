@@ -1,3 +1,4 @@
-export interface ApplicationState {
-    isAuthenticated: boolean;
+export interface Pagination {
+    playersPerPage: number;
+    currentPage: number;
 }

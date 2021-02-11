@@ -19,7 +19,7 @@ cd frontend-assignment
 npm install && npm run start
 ```
 
-**Notice: Made an adjustment in G-loot's reository and added to the headers the "Access-Control-Allow-Methods" in order for PUT to work**
+**Notice: Made an adjustment in G-loot's repository and added to the headers the "Access-Control-Allow-Methods" in order for PUT , POST and DELETE Methods to work**
 
 ### Hot to run 
 
@@ -34,6 +34,8 @@ npm run start
 * Search field with on change search action
 * Delete players from list easily with one click
 * Create player on the fly
+* Added pagination with next and back buttons
+* Calculate and delete on the fly in any page or edit
 
 ### Testing build with
 

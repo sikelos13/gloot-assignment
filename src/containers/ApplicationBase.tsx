@@ -11,16 +11,22 @@ import TableRow from '@material-ui/core/TableRow';
 import Box from '@material-ui/core/Box';
 import { deletePlayerApi, DeletePlayerApiResponse } from '../api/players_management/deletePlayer';
 import toast from 'react-hot-toast';
-import SkeletonLoader from "../components/common/TableCellLoader";
+import SkeletonLoader from "../components/TableCellLoader";
 import AppHeader from '../components/AppHeader';
 import { updatePlayerApi, UpdatePlayerApiResponse } from '../api/players_management/updatePlayer';
 import { createPlayerApi, CreatePlayerApiResponse } from '../api/players_management/createPlayer';
+import PaginationNavBar from '../components/PaginationNavBar';
+import { Pagination } from '../types';
+import { getCurrentPlayersList } from '../utils/getCurrentPlayersList';
+import { TableFooter } from '@material-ui/core';
+import { getHasNextPage } from '../utils/getHasNextPage';
 
 interface ApplicationState {
     loading: boolean;
     playersList: Player[];
     filteredPlayerList: Player[];
     newPlayerName: string;
+    pagination: Pagination;
 }
 
 class StoreManagement extends Component<{}, ApplicationState> {
@@ -31,7 +37,11 @@ class StoreManagement extends Component<{}, ApplicationState> {
             playersList: [],
             filteredPlayerList: [],
             loading: false,
-            newPlayerName: ""
+            newPlayerName: "",
+            pagination: {
+                currentPage: 1,
+                playersPerPage: 5
+            },
         }
 
         // this.handleSearch = setTimeout(this.handleSearch, 500);
@@ -39,14 +49,14 @@ class StoreManagement extends Component<{}, ApplicationState> {
 
     // debounce = (callback: any, wait: number, immediate: boolean = false) => {
     //     let timeout = null as number | null;
-        
+
     //     return function() {
     //       const callNow = immediate && !timeout
     //       const next = () => callback.apply(this, arguments)
-          
+
     //       clearTimeout(timeout)
     //       timeout = setTimeout(next, wait)
-      
+
     //       if (callNow) {
     //         next()
     //       }
@@ -58,12 +68,17 @@ class StoreManagement extends Component<{}, ApplicationState> {
     }
 
     fetchPlayers = () => {
+        const { pagination } = this.state;
+        const { playersPerPage } = pagination;
+
         this.setState({ loading: true });
         fetchPlayersApi().then((response: any) => {
             if (response.success) {
+                const currentPlayersList = getCurrentPlayersList(1, playersPerPage, response.data);
+
                 this.setState({
                     playersList: response.data,
-                    filteredPlayerList: response.data,
+                    filteredPlayerList: currentPlayersList,
                     loading: false
                 })
             } else {
@@ -78,7 +93,8 @@ class StoreManagement extends Component<{}, ApplicationState> {
     }
 
     handleSearch = (event: any) => {
-        const { playersList } = this.state;
+        const { pagination, playersList } = this.state;
+        const { playersPerPage, currentPage } = pagination;
         const value = event.target.value
 
         if (playersList) {
@@ -88,21 +104,24 @@ class StoreManagement extends Component<{}, ApplicationState> {
                         return player;
                     }
                 });
+                const currentPlayersList = getCurrentPlayersList(currentPage, playersPerPage, returnedFilteredPlayers);
 
                 this.setState({
-                    filteredPlayerList: returnedFilteredPlayers,
+                    filteredPlayerList: currentPlayersList,
                 })
             } else {
+                const currentPlayersList = getCurrentPlayersList(1, playersPerPage, playersList);
+
                 this.setState({
-                    filteredPlayerList: playersList,
+                    filteredPlayerList: currentPlayersList,
                 })
             }
         }
     }
 
-
     handleUpdate = (form: any) => {
-        const { playersList } = this.state;
+        const { pagination, playersList } = this.state;
+        const { playersPerPage, currentPage } = pagination;
 
         if (form.name !== "") {
             updatePlayerApi(form.id, form).then((response: UpdatePlayerApiResponse) => {
@@ -114,29 +133,25 @@ class StoreManagement extends Component<{}, ApplicationState> {
                                 name: form.name
                             }
                         }
-
                         return player;
                     });
 
-                    this.setState({ filteredPlayerList: updatedList, playersList: updatedList });
-                    toast.success(response.successMessage, {
-                        duration: 4000
-                    });
+                    const currentPlayersList = getCurrentPlayersList(currentPage, playersPerPage, updatedList);
+
+                    this.setState({ filteredPlayerList: currentPlayersList, playersList: updatedList });
+                    toast.success(response.successMessage, { duration: 4000 });
                 } else {
-                    toast.error(response.errorMessage, {
-                        duration: 4000
-                    });
+                    toast.error(response.errorMessage, { duration: 4000 });
                 }
             });
         } else {
-            toast.error("Name can not be empty", {
-                duration: 3000
-            });
+            toast.error("Name can not be empty", { duration: 3000 });
         }
     }
 
     handleRowDelete = (id: string) => {
-        const { playersList } = this.state;
+        const { playersList, pagination } = this.state;
+        const { playersPerPage, currentPage } = pagination;
 
         deletePlayerApi(id).then((response: DeletePlayerApiResponse) => {
             if (response.success) {
@@ -144,7 +159,12 @@ class StoreManagement extends Component<{}, ApplicationState> {
                     return id !== player.id;
                 });
 
-                this.setState({ filteredPlayerList: updatedList, playersList: updatedList });
+                const currentPlayersList = getCurrentPlayersList(currentPage, playersPerPage, updatedList);
+
+                this.setState({
+                    filteredPlayerList: currentPlayersList,
+                    playersList: updatedList,
+                });
                 toast.success(response.successMessage, {
                     duration: 3000
                 });
@@ -158,7 +178,9 @@ class StoreManagement extends Component<{}, ApplicationState> {
 
     handleAddPlayer = (event: any) => {
         event.preventDefault();
-        const { playersList, newPlayerName } = this.state;
+        const { playersList, newPlayerName, pagination } = this.state;
+        const { playersPerPage, currentPage } = pagination;
+
         let updatedList = playersList;
 
         const formData = {
@@ -169,13 +191,14 @@ class StoreManagement extends Component<{}, ApplicationState> {
             createPlayerApi(formData).then((response: CreatePlayerApiResponse) => {
                 if (response.success) {
                     updatedList.push(response.data);
+                    const currentPlayersList = getCurrentPlayersList(currentPage, playersPerPage, updatedList);
 
-                    this.setState({ filteredPlayerList: updatedList, playersList: updatedList }, () => {
+                    this.setState({ filteredPlayerList: currentPlayersList, playersList: updatedList, newPlayerName: "" }, () => {
                         toast.success(response.successMessage, {
                             duration: 4000
                         });
                     });
-                  
+
                 } else {
                     toast.error(response.errorMessage, {
                         duration: 4000
@@ -195,8 +218,23 @@ class StoreManagement extends Component<{}, ApplicationState> {
         this.setState({ newPlayerName: value })
     }
 
+    handlePaginate = (pageNumber: number) => {
+        const { pagination, playersList } = this.state;
+        const { playersPerPage } = pagination;
+
+        const currentPlayersList = getCurrentPlayersList(pageNumber, playersPerPage, playersList)
+
+        this.setState({
+            pagination: {
+                ...pagination,
+                currentPage: pageNumber
+            },
+            filteredPlayerList: currentPlayersList
+        });
+    }
+
     render() {
-        const { filteredPlayerList, loading, newPlayerName } = this.state;
+        const { filteredPlayerList, loading, newPlayerName, pagination, playersList } = this.state;
 
         return (
             <Box
@@ -242,14 +280,23 @@ class StoreManagement extends Component<{}, ApplicationState> {
 
                                     {filteredPlayerList && filteredPlayerList.length === 0 &&
                                         <TableRow className="table-row">
-                                            <TableCell 
-                                            className="no-data-cell" 
-                                            colSpan={8}>
+                                            <TableCell className="no-data-cell" colSpan={8}>
                                                 No players available
                                             </TableCell>
                                         </TableRow>
                                     }
                                 </TableBody>
+                                <TableFooter>
+                                    <TableRow>
+                                        <TableCell className="pagination-cell" colSpan={1}>
+                                            <PaginationNavBar
+                                                paginate={this.handlePaginate}
+                                                currentPage={pagination.currentPage}
+                                                hasNextPage={getHasNextPage(pagination, playersList)}
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+                                </TableFooter>
                             </Table>
                         }
                         {loading &&
