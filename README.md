@@ -18,6 +18,9 @@ git clone frontend-assignment
 cd frontend-assignment
 npm install && npm run start
 ```
+
+**Notice: Made an adjustment in G-loot's reository and added to the headers the "Access-Control-Allow-Methods" in order for PUT to work**
+
 ### Hot to run 
 
 After installing and run the G-Loot server follow the commands below to start the project in development.
@@ -29,15 +32,8 @@ npm run start
 
 ### Features implemented
 * Search field with on change search action
-* If search results are null disable the editor
-* If user deletes the currently selected note it will automatically select the next from the top of the list
-* Delete notes from list easily with one click
-* Delete notes from filtered list after search action
-* Create note
-* Notes that are being edit will be automatically saved on the fly
-* Notes will be persisted in localStorage of user's browser
-* Markdown parser implemented with [React Markdown](https://github.com/rexxars/react-markdown)
-* Project has been Dockerized 
+* Delete players from list easily with one click
+* Create player on the fly
 
 ### Testing build with
 
