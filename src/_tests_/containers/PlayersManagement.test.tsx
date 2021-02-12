@@ -1,4 +1,4 @@
-import ApplicationBase from "../../containers/ApplicationBase";
+import PlayersManagement from "../../containers/PlayersManagement";
 import * as React from 'react';
 import { shallow, mount } from 'enzyme';
 import PlayersList from "../../components/players_management/PlayersList";
@@ -24,9 +24,9 @@ const PlayersListProps = {
 describe("Application container renders", () => {
   it('renders children when passed in', () => {
     const result = shallow((
-      <ApplicationBase>
+      <PlayersManagement>
         <div className="unique" />
-      </ApplicationBase>
+      </PlayersManagement>
     ));
 
     expect(result).toBeTruthy();

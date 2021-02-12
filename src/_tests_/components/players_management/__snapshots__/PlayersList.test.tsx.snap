@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`Players list container renders renders with props when passed in 1`] = `false`;

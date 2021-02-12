@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import { Route, Switch } from 'react-router-dom';
-import StoreManagement from './containers/ApplicationBase';
+import PlayersManagement from './containers/PlayersManagement';
 import { Container } from '@material-ui/core';
 
 export default class Routes extends Component<{}, {}> {
@@ -8,7 +8,7 @@ export default class Routes extends Component<{}, {}> {
         return (
             <Container className="main-container">                     
                 <Switch>
-                    <Route exact path={["/players", "/"]} component={StoreManagement} />
+                    <Route exact path={["/players", "/"]} component={PlayersManagement} />
                 </Switch>
             </Container>
         );

@@ -21,7 +21,7 @@ import { getCurrentPlayersList } from '../utils/getCurrentPlayersList';
 import { TableFooter } from '@material-ui/core';
 import { getHasNextPage } from '../utils/getHasNextPage';
 
-interface ApplicationState {
+interface PlayersManagementState {
     loading: boolean;
     playersList: Player[];
     filteredPlayerList: Player[];
@@ -29,7 +29,7 @@ interface ApplicationState {
     pagination: Pagination;
 }
 
-class StoreManagement extends Component<{}, ApplicationState> {
+class PlayersManagement extends Component<{}, PlayersManagementState> {
     constructor(props: any) {
         super(props)
 
@@ -263,9 +263,9 @@ class StoreManagement extends Component<{}, ApplicationState> {
                             <Table stickyHeader aria-label="sticky table" className="table-main">
                                 <TableHead className="table-head">
                                     <TableRow>
-                                        <TableCell>Player id</TableCell>
-                                        <TableCell>Player name</TableCell>
-                                        <TableCell>Actions</TableCell>
+                                        <TableCell className="TableCell_PlayerId">Player id</TableCell>
+                                        <TableCell className="TableCell_Player_Name">Player name</TableCell>
+                                        <TableCell className="TableCell_Actions">Actions</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -309,4 +309,4 @@ class StoreManagement extends Component<{}, ApplicationState> {
     }
 }
 
-export default StoreManagement;
+export default PlayersManagement;

@@ -4,7 +4,6 @@ import { Router } from 'react-router-dom';
 import './App.scss';
 import Routes from './Routes';
 import { Toaster } from 'react-hot-toast';
-
 interface OwnProps {
     history: History;
 }

@@ -1,6 +1,7 @@
 import PlayersList from "../../../components/players_management/PlayersList";
 import * as React from 'react';
 import { shallow } from 'enzyme';
+import { TableCell } from "@material-ui/core";
 
 const playersList = [
     { id: "1234", name: "check first test" },
@@ -21,7 +22,7 @@ const PlayersListProps = {
 describe("Players list container renders", () => {
     it('renders with props when passed in', () => {
 
-        const result = shallow(<PlayersList {...PlayersListProps} />).contains(<input />);
+        const result = shallow(<PlayersList {...PlayersListProps} />).contains(<TableCell />);
         expect(result).toMatchSnapshot();
     });
 

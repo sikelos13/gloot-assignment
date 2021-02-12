@@ -3,6 +3,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import { Player } from '../../api/types/Players';
 import { Button, Input } from '@material-ui/core';
+import { getIsSelectedRow } from '../../utils/getIsSelectedRow';
 
 interface StoresListProps {
     playersList: Player[]
@@ -59,11 +60,11 @@ const PlayersList: React.FC<StoresListProps> = (({ playersList, handleDelete, ha
                         key={player.id}
                         className="table-row"
                     >
-                        <TableCell width="40%">
+                        <TableCell width="40%" className="TableCell_PlayerId">
                             {player.id}
                         </TableCell>
-                        <TableCell width="40%">
-                            {isEditMode && selectedRow === player.id
+                        <TableCell width="40%" className="TableCell_Player_Name">
+                            {getIsSelectedRow(isEditMode,selectedRow,player.id)
                                 ? <Input
                                     defaultValue={player.name}
                                     onChange={onChangeInput}
@@ -71,7 +72,7 @@ const PlayersList: React.FC<StoresListProps> = (({ playersList, handleDelete, ha
                                 : player.name
                             }
                         </TableCell>
-                        <TableCell width="20%">
+                        <TableCell width="20%" className="TableCell_Actions">
                             <Button
                                 className="edit-button-list"
                                 variant="contained"
