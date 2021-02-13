@@ -21,12 +21,11 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (({ play
         </DialogTitle>
         <DialogContent>
             <Box flexWrap="no-wrap">
-              Do you want to delete player <Box component="span" fontWeight="bold">{player.name}</Box>?
+                Do you want to delete player <Box component="span" fontWeight="bold">{player.name}</Box>?
             </Box>
-            
         </DialogContent>
         <DialogActions>
-        <Button autoFocus onClick={() => handleDeletePlayer(player.id)} color="primary">
+            <Button autoFocus onClick={() => handleDeletePlayer(player.id)} color="primary">
                 Delete
           </Button>
             <Button autoFocus onClick={handleCloseModal}>

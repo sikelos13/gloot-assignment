@@ -97,7 +97,7 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
         const { playersPerPage } = pagination;
         const value = event.target.value
 
-        if (playersList) {
+        if (playersList.length > 0) {
             if (value !== '') {
                 const returnedFilteredPlayers = playersList.filter((player: Player) => {
                     if (player.name.toLowerCase().indexOf(value.toLowerCase()) !== -1) {

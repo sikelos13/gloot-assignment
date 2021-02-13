@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from '@material-ui/core';
 import NativeSelect from '@material-ui/core/NativeSelect';
-
 interface PaginationProps {
     currentPage: number;
     playersPerPage: number;

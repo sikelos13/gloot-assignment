@@ -22,7 +22,7 @@ const PlayersList: React.FC<StoresListProps> = (({ playersList, handleDelete, ha
     }
 
     const handlePrimaryAction = (isEditRow: boolean, id: string) => {
-        if (isEditMode) {
+        if (isEditRow) {
             const form = { name, id }
             handleUpdate(form);
             closeEditMode();
@@ -96,7 +96,6 @@ const PlayersList: React.FC<StoresListProps> = (({ playersList, handleDelete, ha
             }
         </>
     )
-
 });
 
 export default PlayersList;
