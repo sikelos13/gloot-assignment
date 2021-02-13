@@ -26,7 +26,7 @@ import DeleteConfirmationModal from "../components/modals/DeleteConfirmationModa
 interface PlayersManagementState {
     loading: boolean;
     playersList: Player[];
-    filteredPlayerList: Player[];
+    filteredPlayersList: Player[];
     newPlayerName: string;
     pagination: Pagination;
     isSearching: boolean;
@@ -40,7 +40,7 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
 
         this.state = {
             playersList: [],
-            filteredPlayerList: [],
+            filteredPlayersList: [],
             loading: false,
             newPlayerName: "",
             isSearching: false,
@@ -74,14 +74,14 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                         ...pagination,
                         totalResults: response.data.length
                     },
-                    filteredPlayerList: currentPlayersList,
+                    filteredPlayersList: currentPlayersList,
                     loading: false
                 })
             } else {
                 toast.error(response.errorMessage);
                 this.setState({
                     playersList: [],
-                    filteredPlayerList: [],
+                    filteredPlayersList: [],
                     pagination: {
                         ...pagination,
                         totalResults: 0
@@ -104,10 +104,11 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                         return player;
                     }
                 });
+                
                 const currentPlayersList = getCurrentPlayersList(1, playersPerPage, returnedFilteredPlayers);
 
                 this.setState({
-                    filteredPlayerList: currentPlayersList,
+                    filteredPlayersList: currentPlayersList,
                     isSearching: true,
                     pagination: {
                         ...pagination,
@@ -118,7 +119,7 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                 const currentPlayersList = getCurrentPlayersList(1, playersPerPage, playersList);
 
                 this.setState({
-                    filteredPlayerList: currentPlayersList,
+                    filteredPlayersList: currentPlayersList,
                     isSearching: false,
                     pagination: {
                         ...pagination,
@@ -148,7 +149,7 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
 
                     const currentPlayersList = getCurrentPlayersList(currentPage, playersPerPage, updatedList);
 
-                    this.setState({ filteredPlayerList: currentPlayersList, playersList: updatedList });
+                    this.setState({ filteredPlayersList: currentPlayersList, playersList: updatedList });
                     toast.success(response.successMessage, { duration: 4000 });
                 } else {
                     toast.error(response.errorMessage, { duration: 4000 });
@@ -172,7 +173,7 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                 const currentPlayersList = getCurrentPlayersList(currentPage, playersPerPage, updatedList);
 
                 this.setState({
-                    filteredPlayerList: currentPlayersList,
+                    filteredPlayersList: currentPlayersList,
                     playersList: updatedList,
                     pagination: {
                         ...pagination,
@@ -210,7 +211,7 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                     const currentPlayersList = getCurrentPlayersList(currentPage, playersPerPage, updatedList);
 
                     this.setState({ 
-                            filteredPlayerList: currentPlayersList, 
+                            filteredPlayersList: currentPlayersList, 
                             playersList: updatedList, 
                             newPlayerName: "" ,
                             pagination: {
@@ -253,7 +254,7 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                 ...pagination,
                 currentPage: pageNumber
             },
-            filteredPlayerList: currentPlayersList
+            filteredPlayersList: currentPlayersList
         });
     }
 
@@ -269,7 +270,7 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                 playersPerPage: value,
                 totalResults: playersList.length
             },
-            filteredPlayerList: currentPlayersList
+            filteredPlayersList: currentPlayersList
         })
     }
 
@@ -289,7 +290,15 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
 
 
     render() {
-        const { filteredPlayerList, loading, newPlayerName, pagination, isSearching,selectedPlayer, issModalOpen } = this.state;
+        const { 
+            filteredPlayersList, 
+            loading, 
+            newPlayerName, 
+            pagination, 
+            isSearching,
+            selectedPlayer, 
+            issModalOpen 
+        } = this.state;
         const { currentPage, playersPerPage} = pagination;
 
         return (
@@ -326,9 +335,9 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                                 </TableHead>
                                 <TableBody>
 
-                                {filteredPlayerList.length > 0
+                                {filteredPlayersList.length > 0
                                     ? <PlayersList
-                                        playersList={filteredPlayerList}
+                                        playersList={filteredPlayersList}
                                         handleUpdate={this.handleUpdate}
                                         handleDelete={this.handleOpenModal}
                                     />
@@ -355,7 +364,7 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                                     </TableRow>
                                 </TableFooter>
                             </Table>
-                            : <SkeletonLoader />
+                        : <SkeletonLoader />
                         }
                     </TableContainer>
 

@@ -9,10 +9,10 @@ export interface UpdatePlayerApiResponse {
     successMessage: string;
 }
 /**
- *  Great new store
+ *  Update player
  *
  * Endpoints:
- * - PATCH player/${id}
+ * - PUT player/${id}
  * @param {id} string
  *
  * @returns Promise<UpdatePlayerApiResponse>

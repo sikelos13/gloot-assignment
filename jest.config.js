@@ -1,5 +1,3 @@
-const {defaults} = require('jest-config');
-
 module.exports = {
     "preset": "ts-jest",
     "snapshotSerializers": [
@@ -12,7 +10,6 @@ module.exports = {
         "^.+\\.js$": "babel-jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
-    // "moduleFileExtensions": [...defaults.moduleFileExtensions, 'conf'],
     "snapshotSerializers": ["enzyme-to-json/serializer"],
     "setupFilesAfterEnv": ["./src/setupTests.ts"],
     "moduleFileExtensions": [
