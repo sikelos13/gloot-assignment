@@ -1,6 +1,5 @@
-import { Player } from '../api/types/Players';
-import { Pagination } from '../types';
+import { Pagination } from '../api/types/Pagination';
 
-export const getHasNextPage = (pagination: Pagination, playersList: Player[]) => {
-    return pagination.playersPerPage * pagination.currentPage < playersList.length;
+export const getHasNextPage = (pagination: Pagination) => {
+    return pagination.playersPerPage * pagination.currentPage < pagination.totalResults;
 }

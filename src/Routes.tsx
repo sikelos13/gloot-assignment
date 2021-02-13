@@ -6,7 +6,7 @@ import { Container } from '@material-ui/core';
 export default class Routes extends Component<{}, {}> {
     render() {
         return (
-            <Container className="main-container">                     
+            <Container className="Main_Container">                     
                 <Switch>
                     <Route exact path={["/players", "/"]} component={PlayersManagement} />
                 </Switch>

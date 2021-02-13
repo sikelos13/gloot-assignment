@@ -8,7 +8,7 @@ import { getIsSelectedRow } from '../../utils/getIsSelectedRow';
 interface StoresListProps {
     playersList: Player[]
     handleUpdate: (form: any) => void;
-    handleDelete: (id: string) => void;
+    handleDelete: (player: Player) => void;
 }
 
 const PlayersList: React.FC<StoresListProps> = (({ playersList, handleDelete, handleUpdate }: StoresListProps) => {
@@ -23,11 +23,7 @@ const PlayersList: React.FC<StoresListProps> = (({ playersList, handleDelete, ha
 
     const handlePrimaryAction = (isEditRow: boolean, id: string) => {
         if (isEditMode) {
-            const form = {
-                name,
-                id
-            }
-
+            const form = { name, id }
             handleUpdate(form);
             closeEditMode();
         } else {
@@ -36,12 +32,12 @@ const PlayersList: React.FC<StoresListProps> = (({ playersList, handleDelete, ha
         }
     }
 
-    const handleSecondaryAction = (isEditRow: boolean, id: string) => {
+    const handleSecondaryAction = (isEditRow: boolean, player: Player) => {
         if (isEditRow) {
             closeEditMode();
             setName("");
         } else {
-            handleDelete(id)
+            handleDelete(player)
         }
     }
 
@@ -64,7 +60,7 @@ const PlayersList: React.FC<StoresListProps> = (({ playersList, handleDelete, ha
                             {player.id}
                         </TableCell>
                         <TableCell width="40%" className="TableCell_Player_Name">
-                            {getIsSelectedRow(isEditMode,selectedRow,player.id)
+                            {getIsSelectedRow(isEditMode, selectedRow, player.id)
                                 ? <Input
                                     defaultValue={player.name}
                                     onChange={onChangeInput}
@@ -74,7 +70,7 @@ const PlayersList: React.FC<StoresListProps> = (({ playersList, handleDelete, ha
                         </TableCell>
                         <TableCell width="20%" className="TableCell_Actions">
                             <Button
-                                className="edit-button-list"
+                                className="Button_EditAction"
                                 variant="contained"
                                 color="primary"
                                 size="small"
@@ -84,12 +80,12 @@ const PlayersList: React.FC<StoresListProps> = (({ playersList, handleDelete, ha
                                 {isEditRow ? "Save" : "Edit"}
                             </Button>
                             <Button
-                                className="edit-button-list"
+                                className="Button_EditAction"
                                 variant="contained"
                                 color="secondary"
                                 size="small"
                                 value={player.id}
-                                onClick={() => handleSecondaryAction(isEditRow, player.id)}
+                                onClick={() => handleSecondaryAction(isEditRow, player)}
                             >
                                 {isEditRow ? "Cancel" : "Delete"}
                             </Button>

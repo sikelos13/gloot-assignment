@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { fetchPlayersApi } from '../api/players_management/fetchPlayers';
+import { fetchPlayersApi, FetchPlayersApiResponse } from '../api/players_management/fetchPlayers';
 import PlayersList from '../components/players_management/PlayersList';
 import { Player } from '../api/types/Players';
 import Table from '@material-ui/core/Table';
@@ -16,10 +16,12 @@ import AppHeader from '../components/AppHeader';
 import { updatePlayerApi, UpdatePlayerApiResponse } from '../api/players_management/updatePlayer';
 import { createPlayerApi, CreatePlayerApiResponse } from '../api/players_management/createPlayer';
 import PaginationNavBar from '../components/PaginationNavBar';
-import { Pagination } from '../types';
+import { Pagination } from '../api/types/Pagination';
 import { getCurrentPlayersList } from '../utils/getCurrentPlayersList';
 import { TableFooter } from '@material-ui/core';
 import { getHasNextPage } from '../utils/getHasNextPage';
+import { debounce } from '../utils/debounce';
+import DeleteConfirmationModal from "../components/modals/DeleteConfirmationModal";
 
 interface PlayersManagementState {
     loading: boolean;
@@ -27,6 +29,9 @@ interface PlayersManagementState {
     filteredPlayerList: Player[];
     newPlayerName: string;
     pagination: Pagination;
+    isSearching: boolean;
+    selectedPlayer?: Player;
+    issModalOpen: boolean;
 }
 
 class PlayersManagement extends Component<{}, PlayersManagementState> {
@@ -38,30 +43,17 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
             filteredPlayerList: [],
             loading: false,
             newPlayerName: "",
+            isSearching: false,
+            issModalOpen: false,
             pagination: {
                 currentPage: 1,
+                totalResults: 0,
                 playersPerPage: 5
             },
         }
 
-        // this.handleSearch = setTimeout(this.handleSearch, 500);
+        this.handleSearch = debounce(this.handleSearch, 500);
     }
-
-    // debounce = (callback: any, wait: number, immediate: boolean = false) => {
-    //     let timeout = null as number | null;
-
-    //     return function() {
-    //       const callNow = immediate && !timeout
-    //       const next = () => callback.apply(this, arguments)
-
-    //       clearTimeout(timeout)
-    //       timeout = setTimeout(next, wait)
-
-    //       if (callNow) {
-    //         next()
-    //       }
-    //     }
-    //   }
 
     componentDidMount() {
         this.fetchPlayers();
@@ -72,12 +64,16 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
         const { playersPerPage } = pagination;
 
         this.setState({ loading: true });
-        fetchPlayersApi().then((response: any) => {
+        fetchPlayersApi().then((response: FetchPlayersApiResponse) => {
             if (response.success) {
                 const currentPlayersList = getCurrentPlayersList(1, playersPerPage, response.data);
 
                 this.setState({
                     playersList: response.data,
+                    pagination: {
+                        ...pagination,
+                        totalResults: response.data.length
+                    },
                     filteredPlayerList: currentPlayersList,
                     loading: false
                 })
@@ -86,6 +82,10 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                 this.setState({
                     playersList: [],
                     filteredPlayerList: [],
+                    pagination: {
+                        ...pagination,
+                        totalResults: 0
+                    },
                     loading: false
                 })
             }
@@ -94,7 +94,7 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
 
     handleSearch = (event: any) => {
         const { pagination, playersList } = this.state;
-        const { playersPerPage, currentPage } = pagination;
+        const { playersPerPage } = pagination;
         const value = event.target.value
 
         if (playersList) {
@@ -104,16 +104,26 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                         return player;
                     }
                 });
-                const currentPlayersList = getCurrentPlayersList(currentPage, playersPerPage, returnedFilteredPlayers);
+                const currentPlayersList = getCurrentPlayersList(1, playersPerPage, returnedFilteredPlayers);
 
                 this.setState({
                     filteredPlayerList: currentPlayersList,
+                    isSearching: true,
+                    pagination: {
+                        ...pagination,
+                        totalResults: returnedFilteredPlayers.length
+                    }
                 })
             } else {
                 const currentPlayersList = getCurrentPlayersList(1, playersPerPage, playersList);
 
                 this.setState({
                     filteredPlayerList: currentPlayersList,
+                    isSearching: false,
+                    pagination: {
+                        ...pagination,
+                        totalResults: playersList.length
+                    }
                 })
             }
         }
@@ -164,7 +174,13 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                 this.setState({
                     filteredPlayerList: currentPlayersList,
                     playersList: updatedList,
+                    pagination: {
+                        ...pagination,
+                        totalResults: updatedList.length
+                    }
                 });
+                this.handleCloseModal();
+                
                 toast.success(response.successMessage, {
                     duration: 3000
                 });
@@ -193,7 +209,15 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                     updatedList.push(response.data);
                     const currentPlayersList = getCurrentPlayersList(currentPage, playersPerPage, updatedList);
 
-                    this.setState({ filteredPlayerList: currentPlayersList, playersList: updatedList, newPlayerName: "" }, () => {
+                    this.setState({ 
+                            filteredPlayerList: currentPlayersList, 
+                            playersList: updatedList, 
+                            newPlayerName: "" ,
+                            pagination: {
+                                ...pagination,
+                                totalResults: updatedList.length
+                            }
+                        }, () => {
                         toast.success(response.successMessage, {
                             duration: 4000
                         });
@@ -222,7 +246,7 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
         const { pagination, playersList } = this.state;
         const { playersPerPage } = pagination;
 
-        const currentPlayersList = getCurrentPlayersList(pageNumber, playersPerPage, playersList)
+        const currentPlayersList = getCurrentPlayersList(pageNumber, playersPerPage, playersList);
 
         this.setState({
             pagination: {
@@ -233,8 +257,40 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
         });
     }
 
+    handlePerPageChange = (event: any) => {
+        const { playersList } = this.state;
+        const { value } = event.target;
+
+        const currentPlayersList = getCurrentPlayersList(1, value, playersList);
+
+        this.setState({ 
+            pagination: {
+                currentPage: 1,
+                playersPerPage: value,
+                totalResults: playersList.length
+            },
+            filteredPlayerList: currentPlayersList
+        })
+    }
+
+    handleOpenModal = (player: Player) => {
+        this.setState({
+            selectedPlayer: player,
+            issModalOpen: true
+        });
+    }
+
+    handleCloseModal = () => {
+        this.setState({
+            selectedPlayer: undefined,
+            issModalOpen: false
+        });
+    }
+
+
     render() {
-        const { filteredPlayerList, loading, newPlayerName, pagination, playersList } = this.state;
+        const { filteredPlayerList, loading, newPlayerName, pagination, isSearching,selectedPlayer, issModalOpen } = this.state;
+        const { currentPage, playersPerPage} = pagination;
 
         return (
             <Box
@@ -259,9 +315,9 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                     justifyContent="space-evenly"
                 >
                     <TableContainer className="table-container">
-                        {!loading &&
-                            <Table stickyHeader aria-label="sticky table" className="table-main">
-                                <TableHead className="table-head">
+                        {!loading
+                            ? <Table stickyHeader aria-label="sticky table" className="table-main">
+                                <TableHead className="TableHead_Custom">
                                     <TableRow>
                                         <TableCell className="TableCell_PlayerId">Player id</TableCell>
                                         <TableCell className="TableCell_Player_Name">Player name</TableCell>
@@ -270,39 +326,47 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                                 </TableHead>
                                 <TableBody>
 
-                                    {filteredPlayerList && filteredPlayerList.length > 0 &&
-                                        <PlayersList
-                                            playersList={filteredPlayerList}
-                                            handleUpdate={this.handleUpdate}
-                                            handleDelete={this.handleRowDelete}
-                                        />
-                                    }
-
-                                    {filteredPlayerList && filteredPlayerList.length === 0 &&
-                                        <TableRow className="table-row">
-                                            <TableCell className="no-data-cell" colSpan={8}>
-                                                No players available
-                                            </TableCell>
-                                        </TableRow>
-                                    }
+                                {filteredPlayerList.length > 0
+                                    ? <PlayersList
+                                        playersList={filteredPlayerList}
+                                        handleUpdate={this.handleUpdate}
+                                        handleDelete={this.handleOpenModal}
+                                    />
+                                    : <TableRow className="TableRow_Custom">
+                                        <TableCell className="TableCell_WithoutData" colSpan={8}>
+                                            No players available
+                                        </TableCell>
+                                    </TableRow>
+                                }
+                                
                                 </TableBody>
                                 <TableFooter>
                                     <TableRow>
-                                        <TableCell className="pagination-cell" colSpan={1}>
+                                        <TableCell className="Pagination_TableCell" colSpan={1}>
                                             <PaginationNavBar
                                                 paginate={this.handlePaginate}
-                                                currentPage={pagination.currentPage}
-                                                hasNextPage={getHasNextPage(pagination, playersList)}
+                                                playersPerPage={playersPerPage}
+                                                currentPage={currentPage}
+                                                isSearching={isSearching}
+                                                handlePerPageChange={this.handlePerPageChange}
+                                                hasNextPage={getHasNextPage(pagination)}
                                             />
                                         </TableCell>
                                     </TableRow>
                                 </TableFooter>
                             </Table>
-                        }
-                        {loading &&
-                            <SkeletonLoader />
+                            : <SkeletonLoader />
                         }
                     </TableContainer>
+
+                    {issModalOpen && selectedPlayer &&
+                        <DeleteConfirmationModal
+                            handleCloseModal={this.handleCloseModal}
+                            handleDeletePlayer={this.handleRowDelete}
+                            open={issModalOpen}
+                            player={selectedPlayer}
+                        />
+                    }
                 </Box>
             </Box>
         );

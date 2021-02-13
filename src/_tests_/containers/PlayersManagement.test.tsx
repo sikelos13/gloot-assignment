@@ -38,44 +38,4 @@ describe("Application container renders", () => {
     expect(wrapper.find(PlayersList).length).toEqual(1);
 
   });
-
-//   it('should take a search value and return filtered notes', () => {
-
-//     const event = {
-//       target: {
-//         value: "test search"
-//       }
-//     }
-
-//     const wrapper = shallow(<ApplicationBase />);
-//     expect(wrapper.state('searchValue')).toBe("");
-//     (wrapper.instance() as ApplicationBase).handleSearch(event);
-//     expect(wrapper.state('filteredPlayerList')).not.toBeNull();
-//   });
-
-//   it('should return new array with one more player', () => {
-
-//     const wrapper = shallow(<ApplicationBase />);
-//     wrapper.setState({ filteredPlayerList: playersList })
-//     expect(wrapper.state('filteredPlayerList')).toHaveLength(4);
-//     (wrapper.instance() as ApplicationBase).handleAddPlayer();
-//     (wrapper.instance() as ApplicationBase).handleAddPlayer();
-//     expect(wrapper.state('filteredPlayerList')).toHaveLength(4);
-//   });
-
-
-//   it('should return new array with one less player', () => {
-
-//     const wrapper = shallow(<ApplicationBase />);
-
-
-//     expect(wrapper.state('filteredPlayerList')).toHaveLength(4);
-//     (wrapper.instance() as ApplicationBase).handleAddPlayer();
-//     (wrapper.instance() as ApplicationBase).handleAddPlayer();
-
-//     const randomPlayerList = (wrapper.state('filteredPlayerList') as Player[]);
-//     (wrapper.instance() as ApplicationBase).handleRowDelete(randomPlayerList[0].id);
-//     const updatedNotesList = (wrapper.state('filteredPlayerList') as Player[]);
-//     expect(updatedNotesList.length).toBeGreaterThan(3);
-//   });
 });

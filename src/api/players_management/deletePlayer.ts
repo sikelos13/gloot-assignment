@@ -1,7 +1,6 @@
 
 import axios from 'axios';
 import { handleErrorMessage } from '../utils/handleErrorMessage';
-
 export interface DeletePlayerApiResponse {
     success: boolean;
     errorMessage: string;

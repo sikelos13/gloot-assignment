@@ -9,6 +9,7 @@ const playersList = [
     { id: "1236", name: "check third test" },
     { id: "1237", name: "check fourth test" }
 ];
+
 const PlayersListProps = {
     playersList: playersList,
     handleUpdate: () => {

@@ -1,4 +1,4 @@
-.table-row {
+.TableRow_Custom {
     cursor: pointer;
 
     &:hover {
@@ -16,16 +16,30 @@
     font-weight: bold !important;
 }
 
-.no-data-cell {
+.TableCell_WithoutData {
     text-align: center !important;
 }
 
-.table-head {
+.TableHead_Custom {
     background-color: #7190c9 !important;
 }
 
-.pagination-cell {
+.Pagination_TableCell {
     text-align: center !important;
     border: unset !important;
     float: left;
 }
+
+//Hide columns on screen
+@media only screen and (max-width: 510px) {
+    .TableCell_PlayerId {
+      display: none !important;
+    }
+  }
+
+  @media only screen and (max-width: 385px) {
+    .Pagination_TableCell {
+      display: flex !important;
+      align-items: center;
+    }
+  }

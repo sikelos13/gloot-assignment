@@ -15,12 +15,11 @@ interface ViewHeaderProps {
 const AppHeader: React.FC<ViewHeaderProps> = (({ handleSearch, handleAddPlayer, handleChangeInput, newPlayerName }: ViewHeaderProps) => (
   <Box display="flex" flexDirection="column" alignItems="center">
     <Box component="h2" fontWeight="500" fontSize="2rem" color="#673ab7">Players Management</Box>
-    <Box display="flex" width="100%" justifyContent="space-between" p={1}>
-      <Input placeholder="Search players..." className="search-input" onChange={handleSearch} />
+    <Box display="flex" width="100%" flexDirection="row" justifyContent="space-between" p={1} className="Header_Actions">
+      <Input placeholder="Search players..." className="Search_Input" onChange={handleSearch} />
       <form>
         <Box display="flex" alignItems="center">
           <TextField
-            className="form-input-field"
             label="Add new player"
             variant="outlined"
             name="name"

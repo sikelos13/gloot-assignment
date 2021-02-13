@@ -1,20 +1,19 @@
-.loading-spinner {
-    width: 30px;
-    height: 30px;
-    margin-top: 20px;
-}
-
-.players-management-header {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.edit-button-list {
+.Button_EditAction {
     margin-right: 10px !important;
     margin-bottom: 5px !important;
 }
 
-.search-input {
+.Search_Input {
     width: 100%;
     max-width: 500px;
 }
+
+@media only screen and (max-width: 786px) {
+    .Header_Actions {
+        flex-direction: column !important;
+
+        form {
+            margin-top: 10px;
+        }
+    }
+  }

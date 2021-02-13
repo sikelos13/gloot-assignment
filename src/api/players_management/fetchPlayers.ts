@@ -2,12 +2,11 @@
 import axios from 'axios';
 import { handleErrorMessage } from '../utils/handleErrorMessage';
 import { Player } from '../../api/types/Players';
-
 export interface FetchPlayersApiResponse {
     success: boolean;
     errorMessage: string;
     status: number
-    data: Player;
+    data: Player[];
 }
 /**
  *  Get players list
