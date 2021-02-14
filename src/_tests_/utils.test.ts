@@ -2,6 +2,8 @@ import { getCurrentPlayersList } from '../utils/getCurrentPlayersList';
 import { getHasNextPage } from '../utils/getHasNextPage';
 import { getIsSelectedRow } from '../utils/getIsSelectedRow';
 import { handleErrorMessage } from '../api/utils/handleErrorMessage';
+import { getUpdatedItemsListOnDelete  } from '../utils/getUpdatedItemsListOnDelete';
+import { getUpdatedItemsListOnEdit  } from '../utils/getUpdatedItemsListOnEdit';
 
 const playersList = [
   { id: "1234", name: "check first test" },
@@ -86,5 +88,35 @@ describe("Return error of api call", () => {
     const outputThree = "Object has some problems";
 
     expect(handleErrorMessage(responseApiThree)).toEqual(outputThree);
+  });
+
+  test("it should return a list without the deleted item", () => {
+    const outputThree = [
+      { id: "1235", name: "check second test" },
+      { id: "1236", name: "check third test" },
+      { id: "1237", name: "check fourth test" },
+      { id: "1237", name: "check fith test" },
+      { id: "1237", name: "check sixth test" }
+    ];
+
+    expect(getUpdatedItemsListOnDelete("1234", playersList)).toEqual(outputThree);
+  });
+
+  test("it should return a with the updated item in it", () => {
+    const outputThree = [
+      { id: "1234", name: "update_ name" },
+      { id: "1235", name: "check second test" },
+      { id: "1236", name: "check third test" },
+      { id: "1237", name: "check fourth test" },
+      { id: "1237", name: "check fith test" },
+      { id: "1237", name: "check sixth test" }
+    ];
+
+    const form = {
+        id: "1234",
+        name: "updated_name"
+    }
+
+    expect(getUpdatedItemsListOnEdit(form, playersList)).toEqual(outputThree);
   });
 });
