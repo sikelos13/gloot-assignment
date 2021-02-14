@@ -33,6 +33,7 @@ If everything done correctly the server will be served at port 3000
 
 After installing and run the G-Loot server follow the commands below to start the project in development.
 ```
+git clone gloot-assignment
 cd gloot-assignment
 npm install
 Create on the root folder a .env file and put inside our env var which will use (REACT_APP_API_ENDPOINT="http://localhost:3000/")
