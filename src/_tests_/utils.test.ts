@@ -104,7 +104,7 @@ describe("Return error of api call", () => {
 
   test("it should return a with the updated item in it", () => {
     const outputThree = [
-      { id: "1234", name: "update_ name" },
+      { id: "1234", name: "updated_name" },
       { id: "1235", name: "check second test" },
       { id: "1236", name: "check third test" },
       { id: "1237", name: "check fourth test" },
