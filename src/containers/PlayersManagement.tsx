@@ -22,6 +22,8 @@ import { TableFooter } from '@material-ui/core';
 import { getHasNextPage } from '../utils/getHasNextPage';
 import { debounce } from '../utils/debounce';
 import DeleteConfirmationModal from "../components/modals/DeleteConfirmationModal";
+import { getUpdatedItemsListOnEdit } from "../utils/getUpdatedItemsListOnEdit";
+import { getUpdatedItemsListOnDelete } from "../utils/getUpdatedItemsListOnDelete";
 
 interface PlayersManagementState {
     loading: boolean;
@@ -131,25 +133,21 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
     }
 
     handleUpdate = (form: any) => {
-        const { pagination, playersList } = this.state;
+        const { pagination, playersList, filteredPlayersList, isSearching } = this.state;
         const { playersPerPage, currentPage } = pagination;
 
         if (form.name !== "") {
             updatePlayerApi(form.id, form).then((response: UpdatePlayerApiResponse) => {
                 if (response.success) {
-                    const updatedList = playersList.map((player: Player) => {
-                        if (form.id === player.id) {
-                            return {
-                                ...player,
-                                name: form.name
-                            }
-                        }
-                        return player;
-                    });
-
+                    const updatedList = isSearching 
+                        ? getUpdatedItemsListOnEdit(form, filteredPlayersList) 
+                        : getUpdatedItemsListOnEdit(form, playersList);
                     const currentPlayersList = getCurrentPlayersList(currentPage, playersPerPage, updatedList);
 
-                    this.setState({ filteredPlayersList: currentPlayersList, playersList: updatedList });
+                    this.setState({ 
+                        filteredPlayersList: currentPlayersList, 
+                        playersList: getUpdatedItemsListOnEdit(form, playersList) 
+                    });
                     toast.success(response.successMessage, { duration: 4000 });
                 } else {
                     toast.error(response.errorMessage, { duration: 4000 });
@@ -161,20 +159,19 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
     }
 
     handleRowDelete = (id: string) => {
-        const { playersList, pagination } = this.state;
+        const { playersList, pagination, filteredPlayersList, isSearching } = this.state;
         const { playersPerPage, currentPage } = pagination;
 
         deletePlayerApi(id).then((response: DeletePlayerApiResponse) => {
             if (response.success) {
-                const updatedList = playersList.filter((player: Player) => {
-                    return id !== player.id;
-                });
-
+                const updatedList = isSearching 
+                    ? getUpdatedItemsListOnDelete(id, filteredPlayersList) 
+                    : getUpdatedItemsListOnDelete(id, playersList);
                 const currentPlayersList = getCurrentPlayersList(currentPage, playersPerPage, updatedList);
 
                 this.setState({
                     filteredPlayersList: currentPlayersList,
-                    playersList: updatedList,
+                    playersList: getUpdatedItemsListOnDelete(id, playersList),
                     pagination: {
                         ...pagination,
                         totalResults: updatedList.length
@@ -288,7 +285,6 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
         });
     }
 
-
     render() {
         const { 
             filteredPlayersList, 
@@ -350,17 +346,15 @@ class PlayersManagement extends Component<{}, PlayersManagementState> {
                                 
                                 </TableBody>
                                 <TableFooter>
-                                    <TableRow>
-                                        <TableCell className="Pagination_TableCell" colSpan={1}>
-                                            <PaginationNavBar
-                                                paginate={this.handlePaginate}
-                                                playersPerPage={playersPerPage}
-                                                currentPage={currentPage}
-                                                isSearching={isSearching}
-                                                handlePerPageChange={this.handlePerPageChange}
-                                                hasNextPage={getHasNextPage(pagination)}
-                                            />
-                                        </TableCell>
+                                    <TableRow className="Pagination_TableRow">
+                                        <PaginationNavBar
+                                            paginate={this.handlePaginate}
+                                            playersPerPage={playersPerPage}
+                                            currentPage={currentPage}
+                                            isSearching={isSearching}
+                                            handlePerPageChange={this.handlePerPageChange}
+                                            hasNextPage={getHasNextPage(pagination)}
+                                        />
                                     </TableRow>
                                 </TableFooter>
                             </Table>

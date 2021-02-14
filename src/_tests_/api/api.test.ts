@@ -3,6 +3,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { fetchPlayersApi, FetchPlayersApiResponse} from '../../api/players_management/fetchPlayers';
 import { deletePlayerApi, DeletePlayerApiResponse } from '../../api/players_management/deletePlayer';
 import { updatePlayerApi, UpdatePlayerApiResponse } from '../../api/players_management/updatePlayer';
+import { createPlayerApi, CreatePlayerApiResponse } from '../../api/players_management/createPlayer';
 
 const playersList = [
   { id: "1234", name: "check first test" },
@@ -29,7 +30,7 @@ describe('Update player name api', () => {
       const mock = new MockAdapter(axios);
       const data = false;
 
-      mock.onGet(`${process.env.REACT_APP_API_ENDPOINT}player`).reply(200, data);
+      mock.onPut(`${process.env.REACT_APP_API_ENDPOINT}player`).reply(200, data);
 
       updatePlayerApi("1234", {id: '1234', name: 'new name'}).then((response: UpdatePlayerApiResponse) => {
           expect(response.success).toEqual(data);
@@ -43,11 +44,29 @@ describe('Delete player api', () => {
       const mock = new MockAdapter(axios);
       const data = false;
       
-      mock.onGet(`${process.env.REACT_APP_API_ENDPOINT}player`).reply(200, data);
+      mock.onDelete(`${process.env.REACT_APP_API_ENDPOINT}player`).reply(200, data);
 
       deletePlayerApi('1235').then((response: DeletePlayerApiResponse) => {
           expect(response.success).toEqual(data);
           done();
       });
   });
+});
+
+describe('Create player api', () => {
+    it('returns success to true if player created successfully', done => {
+        const mock = new MockAdapter(axios);
+        const data = true;
+
+        const form = {
+            name: "new name"
+        }
+        
+        mock.onPost(`${process.env.REACT_APP_API_ENDPOINT}player`).reply(200, data);
+  
+        createPlayerApi(form).then((response: CreatePlayerApiResponse) => {
+            expect(response.success).toEqual(data);
+            done();
+        });
+    });
 });

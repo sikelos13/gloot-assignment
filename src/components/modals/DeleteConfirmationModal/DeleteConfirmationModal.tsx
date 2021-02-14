@@ -25,11 +25,11 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = (({ play
             </Box>
         </DialogContent>
         <DialogActions>
+        <Button autoFocus onClick={handleCloseModal}>
+                Cancel
+          </Button>
             <Button autoFocus onClick={() => handleDeletePlayer(player.id)} color="primary">
                 Delete
-          </Button>
-            <Button autoFocus onClick={handleCloseModal}>
-                Cancel
           </Button>
         </DialogActions>
     </Dialog>

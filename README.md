@@ -21,7 +21,7 @@ The server API is running using Node.js and Express.
 ```
 git clone frontend-assignment
 cd frontend-assignment
-Inside the index.js add in function "allowCorsMiddleware" the res.header("Access-Control-Allow-Methods", "PUT,DELETE,POST");
+Inside the index.js add in the function "allowCorsMiddleware" the res.header("Access-Control-Allow-Methods", "PUT,DELETE,POST");
 npm install && npm run start
 ```
 

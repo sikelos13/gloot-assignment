@@ -3,6 +3,10 @@ import * as React from 'react';
 import { shallow, mount } from 'enzyme';
 import PlayersList from "../../components/players_management/PlayersList";
 import { Player } from "../../api/types/Players";
+import axios from 'axios';
+import MockAdapter from 'axios-mock-adapter';
+// import PlayersManagement from "../../containers/PlayersManagement";
+import { fetchPlayersApi, FetchPlayersApiResponse} from '../../api/players_management/fetchPlayers';
 
 const playersList = [
     { id: "1234", name: "check first test" },
